@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrandsRouteImport } from './routes/brands'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as InspectorRouteImport } from './routes/inspector'
+import { Route as SentimentRouteImport } from './routes/sentiment'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ThreatsRouteImport } from './routes/threats'
 
 const IndexRoute = IndexRouteImport.update({
@@ -24,9 +27,24 @@ const BrandsRoute = BrandsRouteImport.update({
   path: '/brands',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InspectorRoute = InspectorRouteImport.update({
   id: '/inspector',
   path: '/inspector',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SentimentRoute = SentimentRouteImport.update({
+  id: '/sentiment',
+  path: '/sentiment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ThreatsRoute = ThreatsRouteImport.update({
@@ -38,34 +56,68 @@ const ThreatsRoute = ThreatsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
+  '/compare': typeof CompareRoute
   '/inspector': typeof InspectorRoute
+  '/sentiment': typeof SentimentRoute
+  '/settings': typeof SettingsRoute
   '/threats': typeof ThreatsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
+  '/compare': typeof CompareRoute
   '/inspector': typeof InspectorRoute
+  '/sentiment': typeof SentimentRoute
+  '/settings': typeof SettingsRoute
   '/threats': typeof ThreatsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
+  '/compare': typeof CompareRoute
   '/inspector': typeof InspectorRoute
+  '/sentiment': typeof SentimentRoute
+  '/settings': typeof SettingsRoute
   '/threats': typeof ThreatsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/brands' | '/inspector' | '/threats'
+  fullPaths:
+    | '/'
+    | '/brands'
+    | '/compare'
+    | '/inspector'
+    | '/sentiment'
+    | '/settings'
+    | '/threats'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/brands' | '/inspector' | '/threats'
-  id: '__root__' | '/' | '/brands' | '/inspector' | '/threats'
+  to:
+    | '/'
+    | '/brands'
+    | '/compare'
+    | '/inspector'
+    | '/sentiment'
+    | '/settings'
+    | '/threats'
+  id:
+    | '__root__'
+    | '/'
+    | '/brands'
+    | '/compare'
+    | '/inspector'
+    | '/sentiment'
+    | '/settings'
+    | '/threats'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BrandsRoute: typeof BrandsRoute
+  CompareRoute: typeof CompareRoute
   InspectorRoute: typeof InspectorRoute
+  SentimentRoute: typeof SentimentRoute
+  SettingsRoute: typeof SettingsRoute
   ThreatsRoute: typeof ThreatsRoute
 }
 
@@ -85,11 +137,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inspector': {
       id: '/inspector'
       path: '/inspector'
       fullPath: '/inspector'
       preLoaderRoute: typeof InspectorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sentiment': {
+      id: '/sentiment'
+      path: '/sentiment'
+      fullPath: '/sentiment'
+      preLoaderRoute: typeof SentimentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/threats': {
@@ -105,7 +178,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrandsRoute: BrandsRoute,
+  CompareRoute: CompareRoute,
   InspectorRoute: InspectorRoute,
+  SentimentRoute: SentimentRoute,
+  SettingsRoute: SettingsRoute,
   ThreatsRoute: ThreatsRoute,
 }
 export const routeTree = rootRouteImport
