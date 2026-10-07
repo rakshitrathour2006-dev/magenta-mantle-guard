@@ -129,9 +129,9 @@ function RootComponent() {
         <div className="cheetah-corner bottom-0 left-0 -rotate-90" />
         <div className="cheetah-corner bottom-0 right-0 rotate-180" />
         <Nav />
-        <main className="relative z-10 mx-auto max-w-6xl px-5 pb-28 pt-8 md:ml-60 md:px-10 md:pb-12 lg:mx-auto lg:pl-72 lg:max-w-none xl:pr-16">
+        <main className="relative z-10 pb-28 md:pb-12 md:pl-60"><div className="mx-auto max-w-6xl px-5 pt-8 md:px-10">
           <Outlet />
-        </main>
+        </div></main>
       </StoreProvider>
     </QueryClientProvider>
   );
