@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { StoreProvider } from "../lib/store";
+import { Nav } from "../components/Nav";
+import { BootGate, PantherLoader } from "../components/Panther";
 
 function NotFoundComponent() {
   return (
@@ -78,14 +81,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -93,12 +90,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
+  pendingComponent: () => <PantherLoader label="Loading" />,
 });
 
 function RootShell({ children }: { children: ReactNode }) {
@@ -121,7 +122,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <StoreProvider>
+        <BootGate />
+        <div className="cheetah-corner left-0 top-0" />
+        <div className="cheetah-corner right-0 top-0 rotate-90" />
+        <div className="cheetah-corner bottom-0 left-0 -rotate-90" />
+        <div className="cheetah-corner bottom-0 right-0 rotate-180" />
+        <Nav />
+        <main className="relative z-10 pb-28 md:pb-12 md:pl-60"><div className="mx-auto max-w-6xl px-5 pt-8 md:px-10">
+          <Outlet />
+        </div></main>
+      </StoreProvider>
     </QueryClientProvider>
   );
 }
