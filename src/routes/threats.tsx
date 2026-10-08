@@ -21,7 +21,7 @@ const CATS: Category[] = ["Fake Impersonation", "Fraudulent Brand Page", "Scam P
 const STATUSES: Status[] = ["New", "Under Investigation", "Takedown Requested", "Resolved"];
 
 function Threats() {
-  const { alerts, brands, setStatus, addAlert } = useStore();
+  const { alerts, brands, setStatus, addAlert, updateAlert } = useStore();
   const [q, setQ] = useState("");
   const [plat, setPlat] = useState("All");
   const [minRisk, setMinRisk] = useState(0);
@@ -87,12 +87,18 @@ function Threats() {
                 <div className="font-semibold">{x.name}</div>
               </div>
             ))}
+            {detail.image && (
+              <div className="col-span-2 flex items-center justify-center gap-3">
+                <img src={detail.image} alt="Saved suspect" className="h-16 w-16 rounded-lg border-2 border-magenta object-cover glow" />
+                <span className="text-sm text-safe">Saved suspect photo</span>
+              </div>
+            )}
             <label className="col-span-2 cursor-pointer text-center text-magenta underline">
               Upload suspect image
               <input type="file" accept="image/*" hidden onChange={async (e) => {
                 const f = e.target.files?.[0]; if (!f) return;
                 const img = await fileToDataUrl(f);
-                useStoreUpdate(detail.id, img); setDetail({ ...detail, image: img });
+                updateAlert(detail.id, { image: img }); setDetail({ ...detail, image: img });
               }} />
             </label>
           </div>
@@ -105,14 +111,6 @@ function Threats() {
   );
 }
 
-// helper bound below via module-level setter
-let useStoreUpdate: (id: string, img: string) => void = () => {};
-function ImageBinder() {
-  const { alerts } = useStore();
-  void alerts;
-  return null;
-}
-void ImageBinder;
 
 function TakedownModal({ alert, brandName, onClose, onSent }: { alert: Alert | null; brandName: string; onClose: () => void; onSent: (id: string) => void }) {
   if (!alert) return null;
