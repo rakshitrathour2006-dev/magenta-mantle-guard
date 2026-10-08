@@ -39,6 +39,8 @@ export interface Settings {
   weekly: boolean;
   apiKey: string;
   sensitivity: number;
+  fx?: boolean;
+  schedule?: string;
 }
 
 const seedBrands: Brand[] = [
@@ -67,6 +69,8 @@ interface Store {
   updateBrand: (id: string, p: Partial<Brand>) => void;
   removeBrand: (id: string) => void;
   addAlert: (a: Alert) => void;
+  updateAlert: (id: string, p: Partial<Alert>) => void;
+  resetAll: () => void;
   setStatus: (id: string, s: Status) => void;
   setSettings: (s: Partial<Settings>) => void;
   pushHistory: (q: string) => void;
@@ -84,7 +88,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const d = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (d) { setBrands(d.brands); setAlerts(d.alerts); setS(d.settings); setHistory(d.history ?? []); }
+      if (d) { setBrands(d.brands); setAlerts(d.alerts); setS((x) => ({ ...x, ...d.settings })); setHistory(d.history ?? []); }
     } catch { /* ignore */ }
     setLoaded(true);
   }, []);
@@ -92,12 +96,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (loaded) localStorage.setItem(KEY, JSON.stringify({ brands, alerts, settings, history }));
   }, [brands, alerts, settings, history, loaded]);
 
+  useEffect(() => { document.documentElement.classList.toggle("fx-off", settings.fx === false); }, [settings.fx]);
+
   const value: Store = {
     brands, alerts, settings, history,
     addBrand: (b) => setBrands((x) => [...x, b]),
     updateBrand: (id, p) => setBrands((x) => x.map((b) => (b.id === id ? { ...b, ...p } : b))),
     removeBrand: (id) => setBrands((x) => x.filter((b) => b.id !== id)),
-    addAlert: (a) => setAlerts((x) => [a, ...x]),
+    addAlert: (a) => {
+      setAlerts((x) => [a, ...x]);
+      if (settings.push && a.risk >= 85 && typeof Notification !== "undefined" && Notification.permission === "granted")
+        new Notification("High-severity threat logged", { body: `${a.handle} · ${a.platform} · ${a.risk}% risk` });
+    },
+    updateAlert: (id, p) => setAlerts((x) => x.map((a) => (a.id === id ? { ...a, ...p } : a))),
+    resetAll: () => {
+      localStorage.removeItem(KEY);
+      setBrands(seedBrands); setAlerts(seedAlerts); setHistory([]);
+      setS({ email: true, push: false, weekly: true, apiKey: "", sensitivity: 2, fx: true, schedule: "Disabled (Manual)" });
+    },
     setStatus: (id, s) => setAlerts((x) => x.map((a) => (a.id === id ? { ...a, status: s } : a))),
     setSettings: (p) => setS((x) => ({ ...x, ...p })),
     pushHistory: (q) => setHistory((h) => [q, ...h.filter((i) => i !== q)].slice(0, 12)),

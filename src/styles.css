@@ -148,3 +148,10 @@
 .fadeup { animation: fadeup .5s ease-out both; }
 @keyframes clawslash { 0% { stroke-dashoffset: 120; opacity: 0; } 20% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: .7; } }
 .claw path { stroke-dasharray: 120; animation: clawslash 1.4s ease-out forwards; }
+
+/* ---- Panther FX off ---- */
+.fx-off .cheetah-corner { display: none; }
+.fx-off body { background-image: none; }
+.fx-off .panther-eyes, .fx-off .panther-eye, .fx-off .floaty { animation: none; }
+/* ---- Neon controls ---- */
+.neon-range { accent-color: var(--magenta); }
